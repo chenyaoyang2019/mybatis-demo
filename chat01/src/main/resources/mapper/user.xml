@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cyy.mybatis.chat01.UserMapper">
+    <!-- 插入 -->
+    <insert id="insert" parameterType="com.cyy.mybatis.chat01.UserModel" keyProperty="id" useGeneratedKeys="true">
+        <![CDATA[ INSERT INTO `t_user`]]>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                <![CDATA[`id`, ]]>
+            </if>
+            <if test="name!=null">
+                <![CDATA[`name`, ]]>
+            </if>
+            <if test="age!=null">
+                <![CDATA[`age`, ]]>
+            </if>
+            <if test="salary!=null">
+                <![CDATA[`salary`, ]]>
+            </if>
+        </trim>
+        <![CDATA[ VALUES ]]>
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id!=null">
+                <![CDATA[ #{id}, ]]>
+            </if>
+            <if test="name!=null">
+            <![CDATA[ #{name}, ]]>
+            </if>
+            <if test="age!=null">
+                <![CDATA[ #{age}, ]]>
+            </if>
+            <if test="salary!=null">
+                <![CDATA[#{salary}, ]]>
+            </if>
+        </trim>
+    </insert>
+
+    <!-- 批量插入 -->
+    <insert id="insertBatch" parameterType="com.cyy.mybatis.chat01.UserModel">
+        <![CDATA[ INSERT INTO `t_user` (`id`, `name`, `age`, `salary`) VALUES ]]>
+        <foreach collection="list" separator="," item="item">
+            (#{item.id}, #{item.name}, #{item.age}, #{item.salary})
+        </foreach>
+    </insert>
+    
+    <!-- 更新 -->
+    <update id="update" parameterType="com.cyy.mybatis.chat01.UserModel">
+        <![CDATA[UPDATE `t_user`]]>
+        <set>
+            <if test="name!=null">
+                <![CDATA[`name` = #{name}, ]]>
+            </if>
+            <if test="age!=null">
+                <![CDATA[`age` = #{age}, ]]>
+            </if>
+            <if test="salary!=null">
+                <![CDATA[`salary` = #{salary}, ]]>
+            </if>
+        </set>
+        <where>
+            <if test="id!=null">
+                <![CDATA[ AND `id` = #{id} ]]>
+            </if>
+        </where>
+    </update>
+
+    <!-- 更新 -->
+    <update id="updateByMap" parameterType="map">
+        <![CDATA[UPDATE `t_user`]]>
+        <set>
+            <if test="name!=null">
+                <![CDATA[`name` = #{name}, ]]>
+            </if>
+            <if test="age!=null">
+                <![CDATA[`age` = #{age}, ]]>
+            </if>
+            <if test="salary!=null">
+                <![CDATA[`salary` = #{salary}, ]]>
+            </if>
+        </set>
+        <where>
+            <if test="id!=null">
+                <![CDATA[ AND `id` = #{id} ]]>
+            </if>
+        </where>
+    </update>
+    
+    <delete id="delete" parameterType="map">
+        <![CDATA[DELETE FROM `t_user`]]>
+        <where>
+            <if test="id!=null">
+                <![CDATA[AND `id` = #{id} ]]>
+            </if>
+        </where>
+    </delete>
+
+    <!-- 查询记录 -->
+    <select id="getModelList" parameterType="map" resultType="com.cyy.mybatis.chat01.UserModel">
+        <![CDATA[SELECT ]]>
+        <choose>
+            <when test="tableColumnList!=null and tableColumnList.size() >= 1">
+                <foreach collection="tableColumnList" item="item" separator=",">
+                    <![CDATA[ ${item} ]]>
+                </foreach>
+            </when>
+            <otherwise>
+                <![CDATA[
+                `id`,
+                `name`,
+                `age`,
+                `salary`
+                ]]>
+            </otherwise>
+        </choose>
+        <![CDATA[
+        FROM
+        `t_user` a
+        ]]>
+        <where>
+            <if test="id!=null and id.toString()!=''">
+                <![CDATA[ AND a.`id` = #{id} ]]>
+            </if>
+            <if test="idList!=null and idList.size() >= 1">
+                <![CDATA[ AND a.`id` IN ]]>
+                <foreach collection="idList" item="item" open="(" separator="," close=")">
+                    <![CDATA[ #{item}]]>
+                </foreach>
+            </if>
+            <if test="name!=null and name.toString()!=''">
+                <![CDATA[ AND a.`name` = #{name} ]]>
+            </if>
+            <if test="age!=null and age.toString()!=''">
+                <![CDATA[ AND a.`age` = #{age} ]]>
+            </if>
+            <if test="salary!=null and salary.toString()!=''">
+                <![CDATA[ AND a.`salary` = #{salary} ]]>
+            </if>
+            <if test="nameLike!=null and nameLike.toString()!=''">
+                <![CDATA[ AND a.`name` LIKE '%${nameLike}%' ]]>
+            </if>
+            <if test="salaryGte!=null and salaryGte.toString()!=''">
+                <![CDATA[ AND a.`salary` >= #{salaryGte} ]]>
+            </if>
+        </where>
+        <if test="sort!=null and sort.toString()!=''">
+            <![CDATA[ ORDER BY ${sort} ]]>
+        </if>
+        <if test="skip!=null and pageSize!=null">
+            <![CDATA[ LIMIT #{skip}, #{pageSize} ]]>
+        </if>
+    </select>
+
+</mapper>
+
+
+
